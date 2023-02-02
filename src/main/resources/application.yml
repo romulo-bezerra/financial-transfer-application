@@ -1,0 +1,40 @@
+management:
+  info:
+    git:
+      mode: full
+  endpoints:
+    web:
+      base-path: /api/v1
+      exposure:
+        include: "health"
+  endpoint:
+    health:
+      show-details: always
+server:
+  port: 8092
+  servlet:
+    context-path: '/financial-transfer'
+
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:~/financialtransferdb
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
+      path: /h2
+
+config:
+  business-params:
+    allowed-transfer-amount:
+      maximum:
+        anyone: 1000
+        ted: 1000
+        pix: 1000
+        doc: 1000
