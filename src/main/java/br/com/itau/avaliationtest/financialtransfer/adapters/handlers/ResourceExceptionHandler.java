@@ -7,6 +7,7 @@ import br.com.itau.avaliationtest.financialtransfer.adapters.exceptions.Transfer
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -25,7 +26,8 @@ public class ResourceExceptionHandler {
     private static final String ACCOUNT_NOT_EXIST_EXCEPTION = "AccountNotExistException";
     private static final String TRANSFER_BLOCKED_EXCEPTION = "TransferBlockedException";
     private static final String ILLEGAL_ARGUMENT_EXCEPTION = "IllegalArgumentException";
-    private static final String ACCOUNT_DUPLICITY__EXCEPTION = "AccountDuplicityException";
+    private static final String ACCOUNT_DUPLICITY_EXCEPTION = "AccountDuplicityException";
+    private static final String METHOD_ARGUMENT_NOT_VALID_EXCEPTION = "MethodArgumentNotValidException";
     private static final String BAD_REQUEST_EXCEPTION = "BadRequestException";
 
 
@@ -42,7 +44,7 @@ public class ResourceExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, BadRequestException.class})
+    @ExceptionHandler({IllegalArgumentException.class, BadRequestException.class, MethodArgumentNotValidException.class})
     public ResponseEntity<StandardError> badRequestGeneralException(Exception e, HttpServletRequest request) {
         printErrorLog(e);
         StandardError err = StandardError.builder()
@@ -96,6 +98,7 @@ public class ResourceExceptionHandler {
 
     /**
      * Metodo de tratamento de erros para print de log
+     *
      * @param e exception em questao como fonte de info para tratamento
      */
     private void printErrorLog(Exception e) {
@@ -103,7 +106,8 @@ public class ResourceExceptionHandler {
             case ACCOUNT_NOT_EXIST_EXCEPTION:
             case TRANSFER_BLOCKED_EXCEPTION:
             case BAD_REQUEST_EXCEPTION:
-            case ACCOUNT_DUPLICITY__EXCEPTION:
+            case ACCOUNT_DUPLICITY_EXCEPTION:
+            case METHOD_ARGUMENT_NOT_VALID_EXCEPTION:
             case ILLEGAL_ARGUMENT_EXCEPTION:
                 log.error(ERROR_PREFIX, e.getClass().getSimpleName(), e.getCause(), e.getMessage());
                 break;
